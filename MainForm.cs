@@ -6,8 +6,18 @@ namespace PalBreeding
     {
         public Dictionary<int, Palu> PaluDic { get; set; } = [];
         public BindingList<PaluBreeding> ViewPaluData { get; set; } = [];
+        public readonly string dataFileName = "data.json";
+        public readonly string dicFileName = "dic.json";
         public MainForm()
         {
+            if (File.Exists(dataFileName))
+            {
+                var data = File.ReadAllText(dataFileName).ToObject<List<PaluBreeding>>();
+                if (data is not null)
+                {
+                    ViewPaluData = new(data);
+                }
+            }
             InitializeComponent();
         }
 
@@ -106,6 +116,7 @@ namespace PalBreeding
             {
                 MessageBox.Show("数据错误");
             }
+            File.WriteAllText(dataFileName, ViewPaluData.ToList().ToJson());
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
